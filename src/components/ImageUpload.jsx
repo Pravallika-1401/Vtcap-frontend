@@ -118,44 +118,107 @@
 
 
 // ===== ImageUpload.jsx =====
-import React, { useState } from "react";
-import axios from "../api/axiosConfig";
+// import React, { useState } from "react";
+// import axios from "../api/axiosConfig";
 
-export default function ImageUpload({ uploadUrl, fieldName = "image", onSuccess }) {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+// export default function ImageUpload({ uploadUrl, fieldName = "image", onSuccess }) {
+//   const [file, setFile] = useState(null);
+//   const [preview, setPreview] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState(null);
+
+//   const handleFile = (e) => {
+//     const f = e.target.files[0];
+//     if (!f) return;
+//     setFile(f);
+//     setPreview(URL.createObjectURL(f));
+//   };
+
+// const [imageData, setImageData] = useState({ file: null, preview: "" });
+
+// const handleImageChange = (file, previewUrl) => {
+//   setImageData({ file, preview: previewUrl });
+// };
+
+// <ImageUpload 
+//   onFileChange={handleImageChange} 
+//   existingPreview={imageData.preview} 
+//   inputName="logo" 
+// />
+
+
+//   const handleUpload = async () => {
+//     if (!file) return setError("Please select an image");
+
+//     setError(null);
+//     setLoading(true);
+
+//     try {
+//       const fd = new FormData();
+//       fd.append(fieldName, file);
+
+//       const res = await axios.post(uploadUrl, fd, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       onSuccess && onSuccess(res.data);
+//       setFile(null);
+//       setPreview(null);
+//     } catch (err) {
+//       setError(err.response?.data?.message || "Upload failed");
+//     }
+
+//     setLoading(false);
+//   };
+
+//   return (
+//     <div className="w-full space-y-2">
+//       <label className="block text-sm font-medium">Upload Image</label>
+
+//       <div className="flex flex-col sm:flex-row gap-3">
+//         <input
+//           type="file"
+//           accept="image/*"
+//           onChange={handleFile}
+//           className="w-full text-sm file:px-4 file:py-2 file:bg-[#0b2343] file:text-white file:border-0 file:rounded"
+//         />
+
+//         <button
+//           disabled={loading}
+//           onClick={handleUpload}
+//           className="px-4 py-2 bg-[#0b2343] text-white rounded disabled:opacity-50"
+//         >
+//           {loading ? "Uploading..." : "Upload"}
+//         </button>
+//       </div>
+
+//       {preview && (
+//         <img src={preview} className="w-40 h-28 object-cover rounded shadow" alt="preview" />
+//       )}
+
+//       {error && <p className="text-red-500 text-sm">{error}</p>}
+//     </div>
+//   );
+// }
+
+
+
+import React, { useState } from "react";
+
+export default function ImageUpload({ onFileChange, existingPreview, inputName }) {
+  const [preview, setPreview] = useState(existingPreview || "");
 
   const handleFile = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
-  };
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const handleUpload = async () => {
-    if (!file) return setError("Please select an image");
-
-    setError(null);
-    setLoading(true);
-
-    try {
-      const fd = new FormData();
-      fd.append(fieldName, file);
-
-      const res = await axios.post(uploadUrl, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      onSuccess && onSuccess(res.data);
-      setFile(null);
-      setPreview(null);
-    } catch (err) {
-      setError(err.response?.data?.message || "Upload failed");
+    const previewUrl = URL.createObjectURL(file);
+    setPreview(previewUrl);
+    
+    // Call parent's callback
+    if (onFileChange) {
+      onFileChange(file, previewUrl);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -166,24 +229,19 @@ export default function ImageUpload({ uploadUrl, fieldName = "image", onSuccess 
         <input
           type="file"
           accept="image/*"
+          name={inputName}
           onChange={handleFile}
           className="w-full text-sm file:px-4 file:py-2 file:bg-[#0b2343] file:text-white file:border-0 file:rounded"
         />
-
-        <button
-          disabled={loading}
-          onClick={handleUpload}
-          className="px-4 py-2 bg-[#0b2343] text-white rounded disabled:opacity-50"
-        >
-          {loading ? "Uploading..." : "Upload"}
-        </button>
       </div>
 
-      {preview && (
-        <img src={preview} className="w-40 h-28 object-cover rounded shadow" alt="preview" />
+      {(preview || existingPreview) && (
+        <img 
+          src={preview || existingPreview} 
+          className="w-40 h-28 object-cover rounded shadow" 
+          alt="preview" 
+        />
       )}
-
-      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 }

@@ -463,77 +463,480 @@
 
 
 // src/pages/HomeAboutPage.jsx
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HomeAboutPage() {
+//   const [data, setData] = useState({ title: "", subtitle: "", content: "" });
+//   const [imgFile, setImgFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     (async () => {
+//       try {
+//         const res = await axios.get("/about-home");
+//         if (res.data) {
+//           setData({
+//             title: res.data.title || "",
+//             subtitle: res.data.subtitle || "",
+//             content: res.data.content || "",
+//           });
+//           setPreview(res.data.imageUrl || "");
+//         }
+//       } catch (err) {
+//         console.error(err);
+//       }
+//     })();
+//   }, []);
+
+//   const onFile = (file, url) => {
+//     setImgFile(file);
+//     setPreview(url);
+//   };
+
+//   const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
+
+//   async function submit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+//       if (imgFile) form.append("image", imgFile);
+//       form.append("title", data.title);
+//       form.append("subtitle", data.subtitle);
+//       form.append("content", data.content);
+
+//       const res = await axios.put("/about-home", form, { headers: { "Content-Type": "multipart/form-data" } });
+//       alert("Updated");
+//       setData({ title: res.data.title, subtitle: res.data.subtitle, content: res.data.content });
+//       setPreview(res.data.imageUrl || preview);
+//     } catch (err) {
+//       console.error(err);
+//       alert("Error");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Home — About Section</h2>
+//       <form onSubmit={submit} className="space-y-4">
+//         <ImageUpload onFileChange={onFile} existingPreview={preview} inputName="image" />
+//         <Input label="Title" name="title" value={data.title} onChange={handleChange} />
+//         <Input label="Subtitle" name="subtitle" value={data.subtitle} onChange={handleChange} />
+//         <div>
+//           <label className="block text-sm font-medium mb-1">Content</label>
+//           <textarea name="content" value={data.content} onChange={handleChange} rows="6" className="w-full rounded p-3 border" />
+//         </div>
+//         <div><button disabled={loading} className="px-4 py-2 bg-indigo-600 text-white rounded">{loading ? "Saving..." : "Save"}</button></div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "../api/axiosConfig";
 import ImageUpload from "../components/ImageUpload";
 import Input from "../components/Input";
 
 export default function HomeAboutPage() {
-  const [data, setData] = useState({ title: "", subtitle: "", content: "" });
-  const [imgFile, setImgFile] = useState(null);
-  const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // ========== MAIN ABOUT SECTION ==========
+  const [aboutData, setAboutData] = useState({
+    title: "",
+    description1: "",
+    description2: "",
+  });
+  const [mainImgFile, setMainImgFile] = useState(null);
+  const [mainPreview, setMainPreview] = useState("");
 
+  // ========== TRUSTED BY LOGOS ==========
+  const [trustedLogos, setTrustedLogos] = useState([]);
+  const [trustedFile, setTrustedFile] = useState(null);
+  const [trustedName, setTrustedName] = useState("");
+  const [trustedPreview, setTrustedPreview] = useState("");
+
+  // ========== AUTHORIZED DISTRIBUTOR LOGOS ==========
+  const [authorizedLogos, setAuthorizedLogos] = useState([]);
+  const [authorizedFile, setAuthorizedFile] = useState(null);
+  const [authorizedName, setAuthorizedName] = useState("");
+  const [authorizedPreview, setAuthorizedPreview] = useState("");
+
+  // ========== LOAD ALL DATA ==========
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get("/about-home");
-        if (res.data) {
-          setData({
-            title: res.data.title || "",
-            subtitle: res.data.subtitle || "",
-            content: res.data.content || "",
-          });
-          setPreview(res.data.imageUrl || "");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    })();
+    loadAboutData();
   }, []);
 
-  const onFile = (file, url) => {
-    setImgFile(file);
-    setPreview(url);
+  async function loadAboutData() {
+    try {
+      const res = await axios.get("/about-home");
+      console.log("📥 Loaded about data:", res.data);
+      
+      if (res.data) {
+        setAboutData({
+          title: res.data.title || "",
+          description1: res.data.description1 || "",
+          description2: res.data.description2 || "",
+        });
+        setMainPreview(res.data.mainImage || "");
+        setTrustedLogos(res.data.trustedLogos || []);
+        setAuthorizedLogos(res.data.authorizedLogos || []);
+      }
+    } catch (err) {
+      console.error("❌ Load error:", err);
+    }
+  }
+
+  // ========== MAIN ABOUT HANDLERS ==========
+  const handleAboutChange = (e) => {
+    setAboutData({ ...aboutData, [e.target.name]: e.target.value });
   };
 
-  const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
+  const handleMainImage = (file, url) => {
+    setMainImgFile(file);
+    setMainPreview(url);
+  };
 
-  async function submit(e) {
+  async function saveMainAbout(e) {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const form = new FormData();
-      if (imgFile) form.append("image", imgFile);
-      form.append("title", data.title);
-      form.append("subtitle", data.subtitle);
-      form.append("content", data.content);
+      if (mainImgFile) form.append("mainImage", mainImgFile);
+      form.append("title", aboutData.title);
+      form.append("description1", aboutData.description1);
+      form.append("description2", aboutData.description2);
 
-      const res = await axios.put("/about-home", form, { headers: { "Content-Type": "multipart/form-data" } });
-      alert("Updated");
-      setData({ title: res.data.title, subtitle: res.data.subtitle, content: res.data.content });
-      setPreview(res.data.imageUrl || preview);
+      console.log("📤 Saving main about...");
+      const res = await axios.put("/about-home", form, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      console.log("✅ Main about saved:", res.data);
+      setAboutData({
+        title: res.data.data.title,
+        description1: res.data.data.description1,
+        description2: res.data.data.description2,
+      });
+      setMainPreview(res.data.data.mainImage || mainPreview);
+      setMainImgFile(null);
+      alert("✅ About section updated successfully!");
     } catch (err) {
-      console.error(err);
-      alert("Error");
+      console.error("❌ Save error:", err);
+      alert("❌ Failed to update: " + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
   }
 
+  // ========== TRUSTED BY HANDLERS ==========
+  const handleTrustedFile = (file, url) => {
+    setTrustedFile(file);
+    setTrustedPreview(url);
+  };
+
+  async function addTrustedLogo(e) {
+    e.preventDefault();
+    
+    if (!trustedFile) {
+      alert("⚠️ Please select a logo image");
+      return;
+    }
+
+    try {
+      const form = new FormData();
+      form.append("logo", trustedFile);
+      form.append("name", trustedName || "Trusted Partner");
+
+      console.log("📤 Adding trusted logo...");
+      const res = await axios.post("/about-home/trusted", form, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      console.log("✅ Trusted logo added:", res.data);
+      setTrustedLogos(res.data.data);
+      setTrustedFile(null);
+      setTrustedName("");
+      setTrustedPreview("");
+      alert("✅ Trusted logo added!");
+    } catch (err) {
+      console.error("❌ Add trusted logo error:", err);
+      alert("❌ Failed: " + (err.response?.data?.message || err.message));
+    }
+  }
+
+  async function deleteTrustedLogo(id) {
+    if (!confirm("Are you sure you want to delete this logo?")) return;
+
+    try {
+      console.log("🗑️ Deleting trusted logo:", id);
+      const res = await axios.delete(`/about-home/trusted/${id}`);
+      
+      console.log("✅ Deleted:", res.data);
+      setTrustedLogos(res.data.data);
+      alert("✅ Logo deleted!");
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+      alert("❌ Failed to delete");
+    }
+  }
+
+  // ========== AUTHORIZED DISTRIBUTOR HANDLERS ==========
+  const handleAuthorizedFile = (file, url) => {
+    setAuthorizedFile(file);
+    setAuthorizedPreview(url);
+  };
+
+  async function addAuthorizedLogo(e) {
+    e.preventDefault();
+    
+    if (!authorizedFile) {
+      alert("⚠️ Please select a logo image");
+      return;
+    }
+
+    try {
+      const form = new FormData();
+      form.append("logo", authorizedFile);
+      form.append("name", authorizedName || "Authorized Dealer");
+
+      console.log("📤 Adding authorized logo...");
+      const res = await axios.post("/about-home/authorized", form, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+
+      console.log("✅ Authorized logo added:", res.data);
+      setAuthorizedLogos(res.data.data);
+      setAuthorizedFile(null);
+      setAuthorizedName("");
+      setAuthorizedPreview("");
+      alert("✅ Authorized logo added!");
+    } catch (err) {
+      console.error("❌ Add authorized logo error:", err);
+      alert("❌ Failed: " + (err.response?.data?.message || err.message));
+    }
+  }
+
+  async function deleteAuthorizedLogo(id) {
+    if (!confirm("Are you sure you want to delete this logo?")) return;
+
+    try {
+      console.log("🗑️ Deleting authorized logo:", id);
+      const res = await axios.delete(`/about-home/authorized/${id}`);
+      
+      console.log("✅ Deleted:", res.data);
+      setAuthorizedLogos(res.data.data);
+      alert("✅ Logo deleted!");
+    } catch (err) {
+      console.error("❌ Delete error:", err);
+      alert("❌ Failed to delete");
+    }
+  }
+
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Edit Home — About Section</h2>
-      <form onSubmit={submit} className="space-y-4">
-        <ImageUpload onFileChange={onFile} existingPreview={preview} inputName="image" />
-        <Input label="Title" name="title" value={data.title} onChange={handleChange} />
-        <Input label="Subtitle" name="subtitle" value={data.subtitle} onChange={handleChange} />
-        <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
-          <textarea name="content" value={data.content} onChange={handleChange} rows="6" className="w-full rounded p-3 border" />
+    <div className="max-w-6xl mx-auto p-4 space-y-8">
+      
+      {/* ==================== MAIN ABOUT SECTION ==================== */}
+      <section className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold mb-6">Home – About Section</h2>
+        
+        <form onSubmit={saveMainAbout} className="space-y-4">
+          {/* Main Image */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Main Image</label>
+            <ImageUpload 
+              onFileChange={handleMainImage} 
+              existingPreview={mainPreview} 
+              inputName="mainImage" 
+            />
+          </div>
+
+          {/* Title */}
+          <Input 
+            label="Title" 
+            name="title" 
+            value={aboutData.title} 
+            onChange={handleAboutChange}
+            placeholder="e.g., About VTC Corporation"
+          />
+
+          {/* Description 1 */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Description 1</label>
+            <textarea 
+              name="description1" 
+              value={aboutData.description1} 
+              onChange={handleAboutChange} 
+              rows="4" 
+              className="w-full rounded border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="First paragraph..."
+            />
+          </div>
+
+          {/* Description 2 */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Description 2</label>
+            <textarea 
+              name="description2" 
+              value={aboutData.description2} 
+              onChange={handleAboutChange} 
+              rows="4" 
+              className="w-full rounded border border-gray-300 p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Second paragraph..."
+            />
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <button 
+              type="submit"
+              disabled={loading} 
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {loading ? "Saving..." : "Save About Section"}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* ==================== TRUSTED BY LOGOS ==================== */}
+      <section className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-bold mb-4">Trusted By Logos</h2>
+        
+        {/* Add Trusted Logo Form */}
+        <form onSubmit={addTrustedLogo} className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label className="block text-sm font-medium mb-1">Company Name</label>
+              <input
+                type="text"
+                value={trustedName}
+                onChange={(e) => setTrustedName(e.target.value)}
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="e.g., Trusted Partner"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Logo Image</label>
+              <ImageUpload 
+                onFileChange={handleTrustedFile} 
+                existingPreview={trustedPreview} 
+                inputName="trustedLogo" 
+              />
+            </div>
+
+            <button 
+              type="submit"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors h-10"
+            >
+              Add Logo
+            </button>
+          </div>
+        </form>
+
+        {/* Display Trusted Logos */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {trustedLogos.length === 0 ? (
+            <p className="col-span-full text-gray-500 text-center py-8">No logos added yet</p>
+          ) : (
+            trustedLogos.map((logo) => (
+              <div 
+                key={logo._id} 
+                className="border rounded-lg p-4 flex flex-col items-center justify-between hover:shadow-md transition-shadow"
+              >
+                <img 
+                  src={logo.logoUrl} 
+                  alt={logo.name}
+                  className="h-16 w-full object-contain mb-2"
+                />
+                <p className="text-xs text-center text-gray-600 mb-2">{logo.name}</p>
+                <button
+                  onClick={() => deleteTrustedLogo(logo._id)}
+                  className="text-xs text-red-600 hover:text-red-800 font-medium"
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
         </div>
-        <div><button disabled={loading} className="px-4 py-2 bg-indigo-600 text-white rounded">{loading ? "Saving..." : "Save"}</button></div>
-      </form>
+      </section>
+
+      {/* ==================== AUTHORIZED DISTRIBUTOR LOGOS ==================== */}
+      <section className="bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-xl font-bold mb-4">Authorized Distributor Logos</h2>
+        
+        {/* Add Authorized Logo Form */}
+        <form onSubmit={addAuthorizedLogo} className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label className="block text-sm font-medium mb-1">Brand Name</label>
+              <input
+                type="text"
+                value={authorizedName}
+                onChange={(e) => setAuthorizedName(e.target.value)}
+                className="w-full rounded border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                placeholder="e.g., Authorized Dealer"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">Logo Image</label>
+              <ImageUpload 
+                onFileChange={handleAuthorizedFile} 
+                existingPreview={authorizedPreview} 
+                inputName="authorizedLogo" 
+              />
+            </div>
+
+            <button 
+              type="submit"
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors h-10"
+            >
+              Add Logo
+            </button>
+          </div>
+        </form>
+
+        {/* Display Authorized Logos */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {authorizedLogos.length === 0 ? (
+            <p className="col-span-full text-gray-500 text-center py-8">No logos added yet</p>
+          ) : (
+            authorizedLogos.map((logo) => (
+              <div 
+                key={logo._id} 
+                className="border rounded-lg p-4 flex flex-col items-center justify-between hover:shadow-md transition-shadow"
+              >
+                <img 
+                  src={logo.logoUrl} 
+                  alt={logo.name}
+                  className="h-16 w-full object-contain mb-2"
+                />
+                <p className="text-xs text-center text-gray-600 mb-2">{logo.name}</p>
+                <button
+                  onClick={() => deleteAuthorizedLogo(logo._id)}
+                  className="text-xs text-red-600 hover:text-red-800 font-medium"
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
     </div>
   );
 }

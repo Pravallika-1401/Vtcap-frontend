@@ -6,7 +6,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000
 
 // Create axios instance with interceptors
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  // baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -51,9 +52,9 @@ export const authAPI = {
 // HEADER API
 // ============================================
 export const headerAPI = {
-  get: () => api.get("/header"),
+  get: () => api.get("/api/header/"),
   update: (formData) => 
-    api.put("/header", formData, {
+    api.put("/api/header/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
 };
@@ -61,13 +62,37 @@ export const headerAPI = {
 // ============================================
 // HERO API
 // ============================================
+// export const heroAPI = {
+//   get: () => api.get("/hero"),
+//   update: (formData) => 
+//     api.put("/hero", formData, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     }),
+// };
+// axios.get("/hero/admin-data")
+// export const heroAPI = {
+//   get: () => api.get("/hero/admin-data"),   // 👈 THIS IS THE FIX
+//   update: (formData) =>
+//     api.put("/hero", formData, {
+//       headers: { "Content-Type": "multipart/form-data" },
+//     }),
+// };
+
+
+
 export const heroAPI = {
-  get: () => api.get("/hero"),
-  update: (formData) => 
-    api.put("/hero", formData, {
+  get: () => api.get("/hero/admin-data"),
+  add: (formData) =>
+    api.post("/hero", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     }),
+  update: (id, formData) =>
+    api.put(`/hero/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  delete: (id) => api.delete(`/hero/${id}`),
 };
+
 
 // ============================================
 // ABOUT HOME API (Home page about section)

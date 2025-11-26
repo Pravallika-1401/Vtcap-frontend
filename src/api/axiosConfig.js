@@ -27,26 +27,46 @@
 
 
 
+// import axios from "axios";
+
+// const API_BASE_URL =
+//   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+// // Create axios instance
+// const api = axios.create({
+//   baseURL: API_BASE_URL,
+// });
+
+// // Attach interceptor to axios instance
+// api.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem("token");
+//     if (token) config.headers.Authorization = `Bearer ${token}`;
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;
+
+
 import axios from "axios";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-// Create axios instance
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${API_BASE_URL}/api`,  // ✅ Added /api here
 });
 
-// Attach interceptor to axios instance
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default api;

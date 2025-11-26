@@ -123,8 +123,10 @@ export default function GalleryHome() {
     try {
       const form = new FormData();
       form.append("image", fileData.file);
-      form.append("title", title);
-      form.append("category", category || "Portfolio");
+      // form.append("title", title);
+      form.append("title", title || "Untitled");
+      // form.append("category", category || "Default");
+      form.append("category", category || "Default");
       await axios.post("/gallery", form, { headers: { "Content-Type": "multipart/form-data" } });
       setTitle(""); setCategory(""); setFileData({ file: null, preview: "" });
       await loadGallery();

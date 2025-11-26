@@ -178,6 +178,616 @@
 
 
 // src/pages/HeaderPage.jsx
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeaderPage() {
+//   const [loading, setLoading] = useState(false);
+//   const [header, setHeader] = useState({
+//     brandName: "",
+//     tagline: "",
+//     homeLabel: "Home",
+//     aboutLabel: "About",
+//     productsLabel: "Products",
+//     galleryLabel: "Gallery",
+//     contactLabel: "Contact",
+//   });
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+
+//   useEffect(() => {
+//     loadHeader();
+//   }, []);
+
+//   async function loadHeader() {
+//     try {
+//       const res = await axios.get("/header");
+//       if (res.data) {
+//         setHeader({
+//           brandName: res.data.brandName || "",
+//           tagline: res.data.tagline || "",
+//           homeLabel: res.data.homeLabel || "Home",
+//           aboutLabel: res.data.aboutLabel || "About",
+//           productsLabel: res.data.productsLabel || "Products",
+//           galleryLabel: res.data.galleryLabel || "Gallery",
+//           contactLabel: res.data.contactLabel || "Contact",
+//         });
+//         setPreview(res.data.logoUrl || "");
+//       }
+//     } catch (err) {
+//       console.error("Load header:", err);
+//     }
+//   }
+
+//   const handleChange = (e) => {
+//     setHeader({ ...header, [e.target.name]: e.target.value });
+//   };
+
+//   const handleLogo = (file, previewUrl) => {
+//     setLogoFile(file);
+//     setPreview(previewUrl);
+//   };
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+//       if (logoFile) form.append("logo", logo);
+//       form.append("brandName", header.brandName);
+//       form.append("tagline", header.tagline);
+//       form.append("homeLabel", header.homeLabel);
+//       form.append("aboutLabel", header.aboutLabel);
+//       form.append("productsLabel", header.productsLabel);
+//       form.append("galleryLabel", header.galleryLabel);
+//       form.append("contactLabel", header.contactLabel);
+
+//       const res = await axios.put("/header", form, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+//       // setHeader({
+//       //   brandName: res.data.brandName || "",
+//       //   tagline: res.data.tagline || "",
+//       //   homeLabel: res.data.homeLabel,
+//       //   aboutLabel: res.data.aboutLabel,
+//       //   productsLabel: res.data.productsLabel,
+//       //   galleryLabel: res.data.galleryLabel,
+//       //   contactLabel: res.data.contactLabel,
+//       // });
+//       setHeader({
+//   brandName: res.data.brandName || "",
+//   tagline: res.data.tagline || "",
+//   homeLabel: res.data.homeLabel || "Home",
+//   aboutLabel: res.data.aboutLabel || "About",
+//   productsLabel: res.data.productsLabel || "Products",
+//   galleryLabel: res.data.galleryLabel || "Gallery",
+//   contactLabel: res.data.contactLabel || "Contact",
+// });
+//       setPreview(res.data.logoUrl || preview);
+//       alert("Header updated");
+//     } catch (err) {
+//       console.error(err);
+//       alert("Update failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Header</h2>
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//           <label className="block text-sm font-medium mb-1">Logo</label>
+//           <ImageUpload onFileChange={handleLogo} existingPreview={preview} inputName="logo" />
+//         </div>
+
+//         {/* <Input label="Brand Name" name="brandName" value={header.brandName} onChange={handleChange} /> */}
+//         <Input label="Brand Name" name="brandName" value={header.brandName || ""} onChange={handleChange} />
+
+//         <Input label="Tagline" name="tagline" value={header.tagline || ""} onChange={handleChange} />
+
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//           <Input label="Home Label" name="homeLabel" value={header.homeLabel || ""} onChange={handleChange} />
+//           <Input label="About Label" name="aboutLabel" value={header.aboutLabel || ""} onChange={handleChange} />
+//           <Input label="Products Label" name="productsLabel" value={header.productsLabel || ""} onChange={handleChange} />
+//           <Input label="Gallery Label" name="galleryLabel" value={header.galleryLabel || ""} onChange={handleChange} />
+//           <Input label="Contact Label" name="contactLabel" value={header.contactLabel || ""} onChange={handleChange} />
+//         </div>
+
+//         <div className="flex gap-2">
+//           <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded">
+//             {loading ? "Saving..." : "Save Header"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeaderPage() {
+//   const [loading, setLoading] = useState(false);
+//   const [header, setHeader] = useState({
+//     brandName: "",
+//     tagline: "",
+//     homeLabel: "Home",
+//     aboutLabel: "About",
+//     productsLabel: "Products",
+//     galleryLabel: "Gallery",
+//     contactLabel: "Contact",
+//   });
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+
+//   useEffect(() => {
+//     loadHeader();
+//   }, []);
+
+//   async function loadHeader() {
+//     try {
+//       const res = await axios.get("/header");
+//       if (res.data) {
+//         setHeader({
+//           brandName: res.data.brandName || "",
+//           tagline: res.data.tagline || "",
+//           homeLabel: res.data.homeLabel || "Home",
+//           aboutLabel: res.data.aboutLabel || "About",
+//           productsLabel: res.data.productsLabel || "Products",
+//           galleryLabel: res.data.galleryLabel || "Gallery",
+//           contactLabel: res.data.contactLabel || "Contact",
+//         });
+//         setPreview(res.data.logoUrl || "");
+//       }
+//     } catch (err) {
+//       console.error("Load header:", err);
+//     }
+//   }
+
+//   const handleChange = (e) => {
+//     setHeader({ ...header, [e.target.name]: e.target.value });
+//   };
+
+//   const handleLogo = (file, previewUrl) => {
+//     setLogoFile(file); // ✅ Store file correctly
+//     setPreview(previewUrl);
+//   };
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+      
+//       // ✅ FIX: Append logoFile (not 'logo')
+//       if (logoFile) {
+//         form.append("logo", logoFile);
+//       }
+      
+//       form.append("brandName", header.brandName);
+//       form.append("tagline", header.tagline);
+//       form.append("homeLabel", header.homeLabel);
+//       form.append("aboutLabel", header.aboutLabel);
+//       form.append("productsLabel", header.productsLabel);
+//       form.append("galleryLabel", header.galleryLabel);
+//       form.append("contactLabel", header.contactLabel);
+
+//       const res = await axios.put("/header", form, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       // ✅ Update state with response data
+//       setHeader({
+//         brandName: res.data.data.brandName || res.data.brandName || "",
+//         tagline: res.data.data.tagline || res.data.tagline || "",
+//         homeLabel: res.data.data.homeLabel || res.data.homeLabel || "Home",
+//         aboutLabel: res.data.data.aboutLabel || res.data.aboutLabel || "About",
+//         productsLabel: res.data.data.productsLabel || res.data.productsLabel || "Products",
+//         galleryLabel: res.data.data.galleryLabel || res.data.galleryLabel || "Gallery",
+//         contactLabel: res.data.data.contactLabel || res.data.contactLabel || "Contact",
+//       });
+
+//       setPreview(res.data.data?.logoUrl || res.data.logoUrl || preview);
+//       setLogoFile(null); // Clear file input
+//       alert("✅ Header updated successfully");
+//     } catch (err) {
+//       console.error("Update error:", err);
+//       alert("❌ Update failed: " + (err.response?.data?.message || err.message));
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Header</h2>
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//           <label className="block text-sm font-medium mb-1">Logo</label>
+//           <ImageUpload 
+//             onFileChange={handleLogo} 
+//             existingPreview={preview} 
+//             inputName="logo" 
+//           />
+//         </div>
+
+//         <Input 
+//           label="Brand Name" 
+//           name="brandName" 
+//           value={header.brandName || ""} 
+//           onChange={handleChange} 
+//         />
+
+//         <Input 
+//           label="Tagline" 
+//           name="tagline" 
+//           value={header.tagline || ""} 
+//           onChange={handleChange} 
+//         />
+
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//           <Input 
+//             label="Home Label" 
+//             name="homeLabel" 
+//             value={header.homeLabel || ""} 
+//             onChange={handleChange} 
+//           />
+//           <Input 
+//             label="About Label" 
+//             name="aboutLabel" 
+//             value={header.aboutLabel || ""} 
+//             onChange={handleChange} 
+//           />
+//           <Input 
+//             label="Products Label" 
+//             name="productsLabel" 
+//             value={header.productsLabel || ""} 
+//             onChange={handleChange} 
+//           />
+//           <Input 
+//             label="Gallery Label" 
+//             name="galleryLabel" 
+//             value={header.galleryLabel || ""} 
+//             onChange={handleChange} 
+//           />
+//           <Input 
+//             label="Contact Label" 
+//             name="contactLabel" 
+//             value={header.contactLabel || ""} 
+//             onChange={handleChange} 
+//           />
+//         </div>
+
+//         <div className="flex gap-2">
+//           <button 
+//             type="submit" 
+//             disabled={loading} 
+//             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+//           >
+//             {loading ? "Saving..." : "Save Header"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeaderPage() {
+//   const [loading, setLoading] = useState(false);
+//   const [header, setHeader] = useState({
+//     brandName: "",
+//     tagline: "",
+//     homeLabel: "Home",
+//     aboutLabel: "About",
+//     productsLabel: "Products",
+//     galleryLabel: "Gallery",
+//     contactLabel: "Contact",
+//   });
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+
+//   useEffect(() => {
+//     loadHeader();
+//   }, []);
+
+//   async function loadHeader() {
+//     try {
+//       const res = await axios.get("/header");
+//       if (res.data) {
+//         setHeader({
+//           brandName: res.data.brand || "",
+//           tagline: res.data.subtitle || "",
+//           homeLabel: res.data.home || "Home",
+//           aboutLabel: res.data.about || "About",
+//           productsLabel: res.data.products || "Products",
+//           galleryLabel: res.data.gallery || "Gallery",
+//           contactLabel: res.data.contact || "Contact",
+//         });
+//         setPreview(res.data.logoUrl || "");
+//       }
+//     } catch (err) {
+//       console.error("Load header:", err);
+//     }
+//   }
+
+//   const handleChange = (e) => {
+//     setHeader({ ...header, [e.target.name]: e.target.value });
+//   };
+
+//   const handleLogo = (file, previewUrl) => {
+//     setLogoFile(file);
+//     setPreview(previewUrl);
+//   };
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+
+//       if (logoFile) {
+//         form.append("logo", logoFile);
+//       }
+
+//       // 🔥 REQUIRED MAPPING FIX — backend field names
+//       form.append("brand", header.brandName);
+//       form.append("subtitle", header.tagline);
+//       form.append("home", header.homeLabel);
+//       form.append("about", header.aboutLabel);
+//       form.append("products", header.productsLabel);
+//       form.append("gallery", header.galleryLabel);
+//       form.append("contact", header.contactLabel);
+
+//       const res = await axios.put("/header", form, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       setHeader({
+//         brandName: res.data.brand || "",
+//         tagline: res.data.subtitle || "",
+//         homeLabel: res.data.home || "Home",
+//         aboutLabel: res.data.about || "About",
+//         productsLabel: res.data.products || "Products",
+//         galleryLabel: res.data.gallery || "Gallery",
+//         contactLabel: res.data.contact || "Contact",
+//       });
+
+//       setPreview(res.data.logoUrl || preview);
+//       setLogoFile(null);
+//       alert("✅ Header updated successfully");
+//     } catch (err) {
+//       console.error("Update error:", err);
+//       alert("❌ Update failed: " + (err.response?.data?.message || err.message));
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Header</h2>
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//           <label className="block text-sm font-medium mb-1">Logo</label>
+//           <ImageUpload
+//             onFileChange={handleLogo}
+//             existingPreview={preview}
+//             inputName="logo"
+//           />
+//         </div>
+
+//         <Input label="Brand Name" name="brandName" value={header.brandName} onChange={handleChange} />
+//         <Input label="Tagline" name="tagline" value={header.tagline} onChange={handleChange} />
+
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//           <Input label="Home Label" name="homeLabel" value={header.homeLabel} onChange={handleChange} />
+//           <Input label="About Label" name="aboutLabel" value={header.aboutLabel} onChange={handleChange} />
+//           <Input label="Products Label" name="productsLabel" value={header.productsLabel} onChange={handleChange} />
+//           <Input label="Gallery Label" name="galleryLabel" value={header.galleryLabel} onChange={handleChange} />
+//           <Input label="Contact Label" name="contactLabel" value={header.contactLabel} onChange={handleChange} />
+//         </div>
+
+//         <div className="flex gap-2">
+//           <button
+//             type="submit"
+//             disabled={loading}
+//             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+//           >
+//             {loading ? "Saving..." : "Save Header"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeaderPage() {
+//   const [loading, setLoading] = useState(false);
+//   const [header, setHeader] = useState({
+//     brandName: "",
+//     tagline: "",
+//     homeLabel: "Home",
+//     aboutLabel: "About",
+//     productsLabel: "Products",
+//     galleryLabel: "Gallery",
+//     contactLabel: "Contact",
+//   });
+//   const [logoFile, setLogoFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+
+//   useEffect(() => {
+//     loadHeader();
+//   }, []);
+
+//   async function loadHeader() {
+//     try {
+//       const res = await axios.get("/header");
+//       if (res.data) {
+//         // setHeader({
+//         //   brandName: res.data.brand || "",
+//         //   tagline: res.data.subtitle || "",
+//         //   homeLabel: res.data.home || "Home",
+//         //   aboutLabel: res.data.about || "About",
+//         //   productsLabel: res.data.products || "Products",
+//         //   galleryLabel: res.data.gallery || "Gallery",
+//         //   contactLabel: res.data.contact || "Contact",
+//         // });
+// setHeader({
+//   brandName: res.data.brandName || "",
+//   tagline: res.data.tagline || "",
+//   homeLabel: res.data.homeLabel || "Home",
+//   aboutLabel: res.data.aboutLabel || "About",
+//   productsLabel: res.data.productsLabel || "Products",
+//   galleryLabel: res.data.galleryLabel || "Gallery",
+//   contactLabel: res.data.contactLabel || "Contact",
+// });
+
+
+//         setPreview(res.data.logoUrl || "");
+//       }
+//     } catch (err) {
+//       console.error("Load header:", err);
+//     }
+//   }
+
+//   const handleChange = (e) => {
+//     setHeader({ ...header, [e.target.name]: e.target.value });
+//   };
+
+//   const handleLogo = (file, previewUrl) => {
+//     setLogoFile(file);
+//     setPreview(previewUrl);
+//   };
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+
+//       if (logoFile) {
+//         form.append("logo", logoFile);
+//       }
+
+//       // form.append("brand", header.brandName);
+//       // form.append("subtitle", header.tagline);
+//       // form.append("home", header.homeLabel);
+//       // form.append("about", header.aboutLabel);
+//       // form.append("products", header.productsLabel);
+//       // form.append("gallery", header.galleryLabel);
+//       // form.append("contact", header.contactLabel);
+
+//       form.append("brandName", header.brandName);
+// form.append("tagline", header.tagline);
+// form.append("homeLabel", header.homeLabel);
+// form.append("aboutLabel", header.aboutLabel);
+// form.append("productsLabel", header.productsLabel);
+// form.append("galleryLabel", header.galleryLabel);
+// form.append("contactLabel", header.contactLabel);
+
+// if (logoFile) form.append("logo", logoFile);
+
+
+//       const res = await axios.put("/header", form, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       // 🔥 FIX: response comes from res.data.data (not res.data)
+//       const d = res.data.data || res.data;
+
+//       setHeader({
+//         brandName: d.brand || "",
+//         tagline: d.subtitle || "",
+//         homeLabel: d.home || "Home",
+//         aboutLabel: d.about || "About",
+//         productsLabel: d.products || "Products",
+//         galleryLabel: d.gallery || "Gallery",
+//         contactLabel: d.contact || "Contact",
+//       });
+
+//       setPreview(d.logoUrl || preview);
+//       setLogoFile(null);
+//       alert("✅ Header updated successfully");
+//     } catch (err) {
+//       console.error("Update error:", err);
+//       alert("❌ Update failed: " + (err.response?.data?.message || err.message));
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Header</h2>
+//       <form onSubmit={handleSubmit} className="space-y-4">
+//         <div>
+//           <label className="block text-sm font-medium mb-1">Logo</label>
+//           <ImageUpload
+//             onFileChange={handleLogo}
+//             existingPreview={preview}
+//             inputName="logo"
+//           />
+//         </div>
+
+//         <Input label="Brand Name" name="brandName" value={header.brandName} onChange={handleChange} />
+//         <Input label="Tagline" name="tagline" value={header.tagline} onChange={handleChange} />
+
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//           <Input label="Home Label" name="homeLabel" value={header.homeLabel} onChange={handleChange} />
+//           <Input label="About Label" name="aboutLabel" value={header.aboutLabel} onChange={handleChange} />
+//           <Input label="Products Label" name="productsLabel" value={header.productsLabel} onChange={handleChange} />
+//           <Input label="Gallery Label" name="galleryLabel" value={header.galleryLabel} onChange={handleChange} />
+//           <Input label="Contact Label" name="contactLabel" value={header.contactLabel} onChange={handleChange} />
+//         </div>
+
+//         <div className="flex gap-2">
+//           <button
+//             type="submit"
+//             disabled={loading}
+//             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+//           >
+//             {loading ? "Saving..." : "Save Header"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "../api/axiosConfig";
 import ImageUpload from "../components/ImageUpload";
@@ -233,9 +843,14 @@ export default function HeaderPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
+
     try {
       const form = new FormData();
-      if (logoFile) form.append("logo", logoFile);
+
+      if (logoFile) {
+        form.append("logo", logoFile);
+      }
+
       form.append("brandName", header.brandName);
       form.append("tagline", header.tagline);
       form.append("homeLabel", header.homeLabel);
@@ -247,20 +862,26 @@ export default function HeaderPage() {
       const res = await axios.put("/header", form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      const d = res.data.data; // updated DB object returned from backend
+
       setHeader({
-        brandName: res.data.brandName || "",
-        tagline: res.data.tagline || "",
-        homeLabel: res.data.homeLabel,
-        aboutLabel: res.data.aboutLabel,
-        productsLabel: res.data.productsLabel,
-        galleryLabel: res.data.galleryLabel,
-        contactLabel: res.data.contactLabel,
+        brandName: d.brandName || "",
+        tagline: d.tagline || "",
+        homeLabel: d.homeLabel || "Home",
+        aboutLabel: d.aboutLabel || "About",
+        productsLabel: d.productsLabel || "Products",
+        galleryLabel: d.galleryLabel || "Gallery",
+        contactLabel: d.contactLabel || "Contact",
       });
-      setPreview(res.data.logoUrl || preview);
-      alert("Header updated");
+
+      setPreview(d.logoUrl || preview);
+      setLogoFile(null);
+
+      alert("✅ Header updated successfully");
     } catch (err) {
-      console.error(err);
-      alert("Update failed");
+      console.error("Update error:", err);
+      alert("❌ Update failed: " + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
@@ -272,7 +893,11 @@ export default function HeaderPage() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Logo</label>
-          <ImageUpload onFileChange={handleLogo} existingPreview={preview} inputName="logo" />
+          <ImageUpload
+            onFileChange={handleLogo}
+            existingPreview={preview}
+            inputName="logo"
+          />
         </div>
 
         <Input label="Brand Name" name="brandName" value={header.brandName} onChange={handleChange} />
@@ -287,7 +912,11 @@ export default function HeaderPage() {
         </div>
 
         <div className="flex gap-2">
-          <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-600 text-white rounded">
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+          >
             {loading ? "Saving..." : "Save Header"}
           </button>
         </div>

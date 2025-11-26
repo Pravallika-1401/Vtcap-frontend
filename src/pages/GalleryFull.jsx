@@ -239,12 +239,13 @@ export default function GalleryFull() {
     title: "",
     imageFile: null,
     isFeatured: false,
+    category: "Default",
   });
 
   const fetchImages = async () => {
     try {
       // const { data } = await axios.get(`${API_BASE_URL}/gallery`);
-      const { data } = await axios.get(`/api/gallery`);
+      const { data } = await axios.get(`/gallery`);
       setImages(data);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to load gallery");
@@ -281,17 +282,19 @@ export default function GalleryFull() {
     try {
       const formData = new FormData();
       formData.append("title", newItem.title);
+    formData.append("category", newItem.category);
       formData.append("isFeatured", newItem.isFeatured);
       formData.append("image", newItem.imageFile);
 
-      await axios.post(`/api/gallery`, formData, {
+      await axios.post(`/gallery`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      setNewItem({ title: "", imageFile: null, isFeatured: false });
+      // setNewItem({ title: "", imageFile: null, isFeatured: false });
+      setNewItem({ title: "", imageFile: null, isFeatured: false, category: newItem.category });
       await fetchImages();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to add image");
@@ -304,7 +307,7 @@ export default function GalleryFull() {
     if (!window.confirm("Delete this image?")) return;
 
     try {
-      await axios.delete(`/api/gallery/${id}`, {
+      await axios.delete(`/gallery/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setImages((prev) => prev.filter((i) => i._id !== id));
@@ -316,7 +319,7 @@ export default function GalleryFull() {
   const handleToggleFeatured = async (id) => {
     try {
       await axios.patch(
-        `/api/gallery/${id}/toggle-featured`,
+        `/gallery/${id}/toggle-featured`,
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );

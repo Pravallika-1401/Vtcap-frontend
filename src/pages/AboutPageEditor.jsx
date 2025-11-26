@@ -173,7 +173,7 @@ export default function AboutPageEditor() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get("/aboutpage");
+        const res = await axios.get("/about-page");
         if (res.data) {
           setData({
             pageTitle: res.data.pageTitle || "",
@@ -201,7 +201,7 @@ export default function AboutPageEditor() {
       form.append("heroText", data.heroText);
       form.append("mainContent", data.mainContent);
 
-      const res = await axios.put("/aboutpage", form, { headers: { "Content-Type": "multipart/form-data" } });
+      const res = await axios.put("/about-page", form, { headers: { "Content-Type": "multipart/form-data" } });
       alert("About Page updated");
       setData({ pageTitle: res.data.pageTitle, heroText: res.data.heroText, mainContent: res.data.mainContent });
       setPreview(res.data.imageUrl || preview);

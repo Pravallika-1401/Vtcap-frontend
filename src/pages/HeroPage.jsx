@@ -179,13 +179,247 @@
 
 
 // src/pages/HeroPage.jsx
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeroPage() {
+//   const [hero, setHero] = useState({ title: "", subtitle: "", buttonText: "", buttonLink: "" });
+//   const [bgFile, setBgFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     loadHero();
+//   }, []);
+
+//   async function loadHero() {
+//     try {
+//       const res = await axios.get("/hero");
+//       if (res.data) {
+//         setHero({
+//           category: res.data.category || "",
+//           title: res.data.title || "",
+//           Description: res.data.Description || "",
+//           // subtitle: res.data.subtitle || "",
+//           // buttonText: res.data.buttonText || "",
+//           // buttonLink: res.data.buttonLink || "",
+//         });
+//         setPreview(res.data.backgroundUrl || "");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }
+
+//   const onFile = (file, url) => {
+//     setBgFile(file);
+//     setPreview(url);
+//   };
+
+//   const handleChange = (e) => setHero({ ...hero, [e.target.name]: e.target.value });
+
+//   async function submit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+//       if (bgFile) form.append("backgroundImage", bgFile); // backend expects backgroundImage per route earlier
+//       form.append("title", hero.title);
+//       form.append("Description", hero.Description);
+//       form.append("category", hero.category);
+//       // form.append("subtitle", hero.subtitle);
+//       // form.append("buttonText", hero.buttonText);
+//       // form.append("buttonLink", hero.buttonLink);
+
+//       const res = await axios.put(`/hero/${hero._id}`, form, { headers: { "Content-Type": "multipart/form-data" } });
+//       setHero({
+//         title: res.data.title || hero.title,
+//         // subtitle: res.data.subtitle || hero.subtitle,
+//         // buttonText: res.data.buttonText || hero.buttonText,
+//         // buttonLink: res.data.buttonLink || hero.buttonLink,
+//         category: res.data.title || hero.category,
+//         Description: res.data.title || hero.Description,
+//       });
+//       setPreview(res.data.backgroundUrl || preview);
+//       alert("Hero updated");
+//     } catch (err) {
+//       console.error(err);
+//       alert("Update failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   const handleSave = async () => {
+//   const formData = new FormData();
+//   formData.append("title", hero.title);
+//   formData.append("description", hero.description);
+//   formData.append("category", hero.category);
+//   if (bgFile) {
+//     formData.append("bgImage", bgFile);
+//   }
+
+//   try {
+//     if (hero._id) {
+//       // Update API
+//       await axios.put(`/api/hero/${hero._id}`, formData);
+//       alert("Hero updated successfully!");
+//     } else {
+//       // Create API
+//       await axios.post("/api/hero", formData);
+//       alert("Hero created successfully!");
+//     }
+//   } catch (error) {
+//     console.error("Error saving hero:", error);
+//     alert("Failed to save hero");
+//   }
+// };
+
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Hero Section</h2>
+//       <form onSubmit={submit} className="space-y-4">
+//         <ImageUpload onFileChange={onFile} existingPreview={preview} inputName="backgroundImage" />
+//         <Input label="Title" name="title" value={hero.title} onChange={handleChange} />
+//         <Input label="Description" name="Description" value={hero.Description} onChange={handleChange} />
+//         <Input label="category" name="category" value={hero.category} onChange={handleChange} />
+
+//         {/* <Input label="Subtitle" name="subtitle" value={hero.subtitle} onChange={handleChange} />
+//         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//           <Input label="Button Text" name="buttonText" value={hero.buttonText} onChange={handleChange} />
+//           <Input label="Button Link" name="buttonLink" value={hero.buttonLink} onChange={handleChange} />
+//         </div> */}
+
+//         <div>
+//           <button type="submit" disabled={loading} className="px-4 py-2 bg-green-600 text-white rounded">
+//             {loading ? "Saving..." : "Save Hero"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// src/pages/HeroPage.jsx
+// import React, { useEffect, useState } from "react";
+// import axios from "../api/axiosConfig";
+// import ImageUpload from "../components/ImageUpload";
+// import Input from "../components/Input";
+
+// export default function HeroPage() {
+//   const [hero, setHero] = useState({
+//     _id: "",
+//     title: "",
+//     Description: "",
+//     category: ""
+//   });
+//   const [bgFile, setBgFile] = useState(null);
+//   const [preview, setPreview] = useState("");
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     loadHero();
+//   }, []);
+
+//   async function loadHero() {
+//     try {
+//       const res = await axios.get("/hero");
+//       if (res.data) {
+//         setHero({
+//           _id: res.data._id,       // 👈 important
+//           category: res.data.category || "",
+//           title: res.data.title || "",
+//           Description: res.data.Description || "",
+//         });
+//         setPreview(res.data.backgroundUrl || "");
+//       }
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }
+
+//   const onFile = (file, url) => {
+//     setBgFile(file);
+//     setPreview(url);
+//   };
+
+//   const handleChange = (e) =>
+//     setHero({ ...hero, [e.target.name]: e.target.value });
+
+//   async function submit(e) {
+//     e.preventDefault();
+//     setLoading(true);
+//     try {
+//       const form = new FormData();
+//       if (bgFile) form.append("backgroundImage", bgFile);
+//       form.append("title", hero.title);
+//       form.append("Description", hero.Description);
+//       form.append("category", hero.category);
+
+//       // 👇 FIXED API endpoint (add id) — no more 404
+//       const res = await axios.put(`/hero/${hero._id}`, form, {
+//         headers: { "Content-Type": "multipart/form-data" },
+//       });
+
+//       setHero({
+//         _id: res.data._id,
+//         title: res.data.title || hero.title,
+//         category: res.data.category || hero.category,
+//         Description: res.data.Description || hero.Description,
+//       });
+//       setPreview(res.data.backgroundUrl || preview);
+//       alert("Hero updated");
+//     } catch (err) {
+//       console.error(err);
+//       alert("Update failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   return (
+//     <div className="max-w-3xl mx-auto p-4">
+//       <h2 className="text-2xl font-bold mb-4">Edit Hero Section</h2>
+//       <form onSubmit={submit} className="space-y-4">
+//         <ImageUpload onFileChange={onFile} existingPreview={preview} inputName="backgroundImage" />
+//         <Input label="Title" name="title" value={hero.title} onChange={handleChange} />
+//         <Input label="Description" name="Description" value={hero.Description} onChange={handleChange} />
+//         <Input label="category" name="category" value={hero.category} onChange={handleChange} />
+
+//         <div>
+//           <button type="submit" disabled={loading} className="px-4 py-2 bg-green-600 text-white rounded">
+//             {loading ? "Saving..." : "Save Hero"}
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+
+
+
+
+// src/pages/HeroPage.jsx
 import React, { useEffect, useState } from "react";
 import axios from "../api/axiosConfig";
 import ImageUpload from "../components/ImageUpload";
 import Input from "../components/Input";
 
 export default function HeroPage() {
-  const [hero, setHero] = useState({ title: "", subtitle: "", buttonText: "", buttonLink: "" });
+  const [hero, setHero] = useState({
+    _id: "",
+    title: "",
+    Description: "",
+    category: ""
+  });
   const [bgFile, setBgFile] = useState(null);
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
@@ -194,48 +428,84 @@ export default function HeroPage() {
     loadHero();
   }, []);
 
+// useEffect(() => {
+//   heroAPI.get().then((res) => {
+//     setSlides(res.data.slides); // res.data.slides endukante admin route full object return chestundi
+//   });
+// }, []);
+
+
+
+
+  // async function loadHero() {
+  //   try {
+  //     // const res = await axios.get("/hero");
+  //     const res = await axios.get("/hero/admin-data");
+  //     if (res.data) {
+  //       setHero({
+  //         _id: res.data._id || res.data.id,              // 👈 _id secured
+  //         category: res.data.category || "",
+  //         title: res.data.title || "",
+  //         Description: res.data.Description || res.data.description || "",
+  //       });
+  //       setPreview(res.data.backgroundUrl || "");
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
+
+
   async function loadHero() {
-    try {
-      const res = await axios.get("/hero");
-      if (res.data) {
-        setHero({
-          title: res.data.title || "",
-          subtitle: res.data.subtitle || "",
-          buttonText: res.data.buttonText || "",
-          buttonLink: res.data.buttonLink || "",
-        });
-        setPreview(res.data.backgroundUrl || "");
-      }
-    } catch (err) {
-      console.error(err);
+  try {
+    const res = await axios.get("/hero/admin-data");
+    const slide = res.data.slides?.[0]; // first slide load
+
+    if (slide) {
+      setHero({
+        _id: res.data._id,
+        title: slide.title || "",
+        Description: slide.description || "",
+        category: slide.category || "",
+      });
+      setPreview(slide.image || "");
     }
+  } catch (err) {
+    console.error(err);
   }
+}
+
 
   const onFile = (file, url) => {
     setBgFile(file);
     setPreview(url);
   };
 
-  const handleChange = (e) => setHero({ ...hero, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setHero({ ...hero, [e.target.name]: e.target.value });
 
   async function submit(e) {
     e.preventDefault();
     setLoading(true);
     try {
       const form = new FormData();
-      if (bgFile) form.append("backgroundImage", bgFile); // backend expects backgroundImage per route earlier
+      if (bgFile) form.append("backgroundImage", bgFile);
       form.append("title", hero.title);
-      form.append("subtitle", hero.subtitle);
-      form.append("buttonText", hero.buttonText);
-      form.append("buttonLink", hero.buttonLink);
+      form.append("Description", hero.Description);
+      form.append("category", hero.category);
 
-      const res = await axios.put("/hero", form, { headers: { "Content-Type": "multipart/form-data" } });
-      setHero({
-        title: res.data.title || hero.title,
-        subtitle: res.data.subtitle || hero.subtitle,
-        buttonText: res.data.buttonText || hero.buttonText,
-        buttonLink: res.data.buttonLink || hero.buttonLink,
+      // 👇 update API (correct route)
+      const res = await axios.put(`/hero/${hero._id}`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      setHero({
+        _id: res.data._id || res.data.id,
+        title: res.data.title,
+        category: res.data.category,
+        Description: res.data.Description || res.data.description,
+      });
+
       setPreview(res.data.backgroundUrl || preview);
       alert("Hero updated");
     } catch (err) {
@@ -250,16 +520,36 @@ export default function HeroPage() {
     <div className="max-w-3xl mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Edit Hero Section</h2>
       <form onSubmit={submit} className="space-y-4">
-        <ImageUpload onFileChange={onFile} existingPreview={preview} inputName="backgroundImage" />
-        <Input label="Title" name="title" value={hero.title} onChange={handleChange} />
-        <Input label="Subtitle" name="subtitle" value={hero.subtitle} onChange={handleChange} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Input label="Button Text" name="buttonText" value={hero.buttonText} onChange={handleChange} />
-          <Input label="Button Link" name="buttonLink" value={hero.buttonLink} onChange={handleChange} />
-        </div>
+        <ImageUpload
+          onFileChange={onFile}
+          existingPreview={preview}
+          inputName="backgroundImage"
+        />
+        <Input
+          label="Title"
+          name="title"
+          value={hero.title}
+          onChange={handleChange}
+        />
+        <Input
+          label="Description"
+          name="Description"
+          value={hero.Description}
+          onChange={handleChange}
+        />
+        <Input
+          label="category"
+          name="category"
+          value={hero.category}
+          onChange={handleChange}
+        />
 
         <div>
-          <button type="submit" disabled={loading} className="px-4 py-2 bg-green-600 text-white rounded">
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 bg-green-600 text-white rounded"
+          >
             {loading ? "Saving..." : "Save Hero"}
           </button>
         </div>

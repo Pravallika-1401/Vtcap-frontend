@@ -367,24 +367,107 @@ export default function Login() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErr(null);
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setErr(null);
 
-    try {
-      const res = await axios.post("/auth/login", form);
+//     try {
+//       const res = await axios.post("/auth/login", form);
 
-      const token = res.data.token;
-      const user = res.data.user;
+//       // const token = res.data.token;
+//       // const user = res.data.user;
 
-      setToken(token);
-      setUser(user);
+// const token = res.data.token || res.data.accessToken || res.data.data?.token;
+// const user = res.data.user || res.data.data?.user;
 
-      navigate("/dashboard");
-    } catch (err) {
-      setErr(err.response?.data?.message || "Login failed");
+
+//       setToken(token);
+//       setUser(user);
+
+//       navigate("/dashboard");
+//     } catch (err) {
+//       setErr(err.response?.data?.message || "Login failed");
+//     }
+//   };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setErr(null);
+
+//   try {
+//     const res = await axios.post("/auth/login", form);
+
+//     const token = res.data.token || res.data.accessToken || res.data.data?.token;
+//     const user = res.data.user || res.data.data?.user || res.data;
+
+//     if (!token) throw new Error("Token missing in backend response");
+
+//     localStorage.setItem("token", token);
+//     setToken(token);
+//     setUser(user);
+
+//     navigate("/dashboard");
+//   } catch (err) {
+//     console.log("Login Error:", err.response?.data);
+//     setErr(err.response?.data?.message || "Login failed");
+//   }
+// };
+
+
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setErr(null);
+
+//   try {
+//     const res = await axios.post("/auth/login", form);
+
+//     const token = res.data.token;
+//     const user = res.data.admin;  // backend sends "admin"
+
+//     if (!token || !user || !admin) throw new Error("Invalid login data");
+
+//     localStorage.setItem("token", token);
+//     setToken(token);
+//     setUser(user);
+
+//     navigate("/dashboard");
+//   } catch (err) {
+//     console.log("Login Error:", err.response?.data);
+//     setErr(err.response?.data?.message || "Login failed");
+//   }
+// };
+
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setErr(null);
+
+  try {
+    const res = await axios.post("/auth/login", form);
+
+    const token = res.data.token;
+    const user = res.data.admin;   // backend sends admin
+
+    // validate response
+    if (!token || !user) {
+      setErr("Invalid login credentials");
+      return;
     }
-  };
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user)); 
+    setToken(token);
+    setUser(user);
+
+    navigate("/dashboard");
+  } catch (err) {
+    console.log("Login Error:", err.response?.data);
+    setErr(err.response?.data?.message || "Login failed");
+  }
+};
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">

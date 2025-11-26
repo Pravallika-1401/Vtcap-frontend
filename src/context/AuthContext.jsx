@@ -192,6 +192,71 @@
 
 
 
+// // src/context/AuthContext.jsx
+// import { createContext, useContext, useState, useEffect } from "react";
+
+// // IMPORTANT FIX: export AuthContext
+// export const AuthContext = createContext();
+
+// export const AuthProvider = ({ children }) => {
+//   const [token, setToken] = useState(localStorage.getItem("token") || "");
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     // Load stored token
+//     const storedToken = localStorage.getItem("token");
+//     if (storedToken) {
+//       setToken(storedToken);
+//     }
+//     setLoading(false);
+//   }, []);
+
+//   const login = (newToken, userData = null) => {
+//     localStorage.setItem("token", newToken);
+//     setToken(newToken);
+//     if (userData) setUser(userData);
+//   };
+
+//   const logout = () => {
+//     localStorage.removeItem("token");
+//     setToken("");
+//     setUser(null);
+//   };
+
+//   const isAuthenticated = () => !!token;
+
+//   return (
+//     <AuthContext.Provider
+//       value={{
+//         token,
+//         user,
+//         login,
+//         logout,
+//         isAuthenticated,
+//         loading,
+//       }}
+//     >
+//       {children}
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export const useAuth = () => {
+//   const context = useContext(AuthContext);
+//   if (!context) {
+//     throw new Error("useAuth must be used within AuthProvider");
+//   }
+//   return context;
+// };
+
+
+
+
+
+
+
+
 // src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -206,20 +271,32 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Load stored token
     const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");  // ⭐ ADDED
+
     if (storedToken) {
       setToken(storedToken);
     }
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));               // ⭐ ADDED
+    }
+
     setLoading(false);
   }, []);
 
   const login = (newToken, userData = null) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
-    if (userData) setUser(userData);
+
+    if (userData) {
+      localStorage.setItem("user", JSON.stringify(userData));   // ⭐ ADDED
+      setUser(userData);
+    }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");                            // ⭐ ADDED
     setToken("");
     setUser(null);
   };
@@ -231,6 +308,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         token,
         user,
+         setToken,   
+    setUser,
         login,
         logout,
         isAuthenticated,
